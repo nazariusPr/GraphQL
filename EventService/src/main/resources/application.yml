@@ -1,0 +1,25 @@
+server:
+  port: 9092
+
+spring:
+  application:
+    name: EventService
+
+  sql:
+    init:
+      platform: postgres
+
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+client:
+  ip-address: ${CLIENT_IP_ADDRESS}

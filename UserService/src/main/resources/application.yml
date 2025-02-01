@@ -1,0 +1,32 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: UserService
+
+  sql:
+    init:
+      platform: postgres
+
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+jwt:
+  secrets:
+    access-token: ${ACCESS_TOKEN_SECRET}
+
+  durations:
+    access-token: 900000          # 15 minutes in milliseconds
+
+client:
+  ip-address: ${CLIENT_IP_ADDRESS}

@@ -1,0 +1,64 @@
+scalar LocalDateTime
+
+type Query {
+    userByUsername(username: String): User
+    eventByTitle(title: String): Event
+    participantById(id: ID): Participant
+}
+
+type Mutation {
+    auth(auth: Auth): AccessToken
+    register(register: Register): AccessToken
+    createEvent(createEvent: CreateEvent): Event
+    createParticipant(createParticipant: CreateParticipant): Participant
+}
+
+
+input Auth {
+    identifier: String!
+    password: String!
+}
+
+input Register {
+    email: String!
+    username: String!
+    bio: String!
+    password: String!
+}
+
+type AccessToken {
+    accessToken: String
+}
+
+type User {
+    id: ID
+    email: String
+    username: String
+    bio: String
+    createdAt: LocalDateTime
+}
+
+type Event {
+    id: ID
+    title: String
+    description: String
+    startAt: LocalDateTime
+    endAt: LocalDateTime
+    owner: User
+}
+
+input CreateEvent {
+    title: String!
+    description: String!
+    startAt: LocalDateTime!
+    endAt: LocalDateTime!
+}
+
+type Participant {
+    id: ID
+    user: User
+}
+
+input CreateParticipant {
+    eventId: ID
+}

@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  bff:
+    build: ./BFF
+    image: bff:latest
+    container_name: bff
+    ports:
+      - "9090:9090"
+    environment:
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      USER_SERVICE_URL: ${USER_SERVICE_URL}
+      EVENT_SERVICE_URL: ${EVENT_SERVICE_URL}
+    depends_on:
+      - user_service
+      - event_service
+    networks:
+      backend_network:
+        ipv4_address: 192.168.1.100
+
+  user_service:
+    build: ./UserService
+    image: user-service:latest
+    container_name: user-service
+    ports:
+      - "9091:9090"
+    environment:
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      DATASOURCE_URL: ${DATASOURCE_USER_URL}
+      DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      CLIENT_IP_ADDRESS: ${CLIENT_IP_ADDRESS}
+    depends_on:
+      - db
+    networks:
+      backend_network:
+        ipv4_address: 192.168.1.101
+
+  event_service:
+    build: ./EventService
+    image: event-service:latest
+    container_name: event-service
+    ports:
+      - "9092:9090"
+    environment:
+      DATASOURCE_URL: ${DATASOURCE_EVENT_URL}
+      DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      CLIENT_IP_ADDRESS: ${CLIENT_IP_ADDRESS}
+    depends_on:
+      - db
+    networks:
+      backend_network:
+        ipv4_address: 192.168.1.102
+
+  db:
+    image: postgres:16
+    container_name: db
+    environment:
+      POSTGRES_USER: ${DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      backend_network:
+        ipv4_address: 192.168.1.103
+
+networks:
+  backend_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24

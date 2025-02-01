@@ -1,0 +1,18 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: BFF
+  graphql:
+    graphiql:
+      enabled: true
+
+
+jwt:
+  secrets:
+    access-token: ${ACCESS_TOKEN_SECRET}
+
+service:
+  user-service: ${USER_SERVICE_URL}
+  event-service: ${EVENT_SERVICE_URL}
